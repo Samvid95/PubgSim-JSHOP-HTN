@@ -66,6 +66,21 @@
 			((!!visit ?loc1)(!walk ?player ?loc1 ?mid) (!!trace (recursively-calling walk-path)) (walk-path ?mid ?loc2) (!!trace (stopped-recursing walk-path)))
 		)
 		
+
+		
+		(:method (find-a-gun ?player ?text ?gun)
+			
+			;Branch 0 If the player is in the same room as the gun then pick up the gun!
+			((in-location ?player ?loc)(in-location ?gun ?loc) (call TracePrint (find-a-gun branch-1 ?loc)))
+			((!say ?player ?text ?gun))
+			
+
+			;Branck 1 Player is not in the same room as gun so now go and find a gun!
+			((in-location ?player ?loc1)(in-location ?gun ?loc2)(call TracePrint(find-a-gun branch-2 ?loc1 ?loc2)))
+			((walk-path ?loc1 ?loc2)(find-a-gun ?player ?text ?gun))	
+			
+		)
+		
 		;This is an axiom which checks that if loc1 and loc2 are connected then you can walk between them!!
 		(:- (can-walk ?loc1 ?loc2) (connected ?loc1 ?loc2))
 		(:- (can-walk ?loc1 ?loc2) (connected ?loc2 ?loc1))

@@ -28,6 +28,8 @@
    	 	(location backyard)
    	 	(in-location me living-room)
    	 	(in-location mary backyard)
+		(in-location AKM porch)
+		(in-location 5.56mm kitchen)
    	 	(connected living-room porch)
    	 	(connected living-room kitchen)
    	 	(connected backyard kitchen)
@@ -37,6 +39,7 @@
    ; it to. The method finds a path to the person and then it says the word to them. 
    
    ;((say-to-person hello mary))
-   ((say-to-person me hello mary))
+    ((say-to-person me hello mary))
+    ;(find-a-gun me foundit AKM))
    ;(say-to-person me hello mary))
  )
