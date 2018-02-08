@@ -1,0 +1,42 @@
+(defproblem problem helloworld
+
+  ; The initial facts of the world. This world has two locactions connected together. "Me" (the agent
+  ; in this world) starts in one location and the person you're supposed to say "hello" to is in another.
+  ; Note that HTN domains don't have to be about explicit agents in worlds. For example, the
+  ; blocks world and freecell domains don't have a represented agent in a world - instead there is a
+  ; world containing a "problem" which the system is trying to solve.
+  
+  ; There are two different problem definitions below. You can comment in one and comment out the other 
+  ; to solve the two different problems. You can of course define your own problems in this file as well. 
+
+  ; This smaller problem definition works fine in buggy version of helloworld. 
+
+    ;(
+    ;  (location living-room)
+    ;  (location kitchen)
+    ;  (in-location xyz kitchen)
+    ;  (in-location abc living-room)
+    ;  (connected living-room kitchen)
+    ;)
+
+  ; This bigger problem definition doesn't work in the buggy version of helloworld. 
+
+     (
+     	(location living-room)
+   	 	(location kitchen)
+   	 	(location porch)
+   	 	(location backyard)
+   	 	(in-location me living-room)
+   	 	(in-location mary backyard)
+   	 	(connected living-room porch)
+   	 	(connected living-room kitchen)
+   	 	(connected backyard kitchen)
+   	 )
+
+   ; The method to start with. The say method takes as an argument word to say and the person to say
+   ; it to. The method finds a path to the person and then it says the word to them. 
+   
+   ;((say-to-person hello mary))
+   ((say-to-person me hello mary))
+   ;(say-to-person me hello mary))
+ )

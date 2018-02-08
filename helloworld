@@ -1,0 +1,76 @@
+(defdomain helloworld
+	(
+		
+		;Now in this operation player is moving on from to to! 
+		;and it is generalized for every player in the game!!! (Probably)
+		
+		(:operator (!walk ?player ?from ?to)
+			((in-location ?player ?from)(location ?to))
+			((in-location ?player ?from))
+			((in-location ?player ?to))
+		)
+		
+		;Saying ?text to the ?person if we are going to meet them somewhere!
+		(:operator (!say ?player ?text ?person)
+			((in-location ?player ?loc)(in-location ?person ?loc))
+			()
+			()
+		)
+		
+		
+		;Now the we are marking the visited points!
+		(:operator (!!visit ?loc)
+			((call TracePrint (visit ?loc)))
+			()
+			((visited ?loc))
+		)
+		
+		;This trace is useless just copy pasted because it's in the original helloworld
+		(:operator (!!trace ?message)
+			((call TracePrint ?message))
+			()
+			()
+		)
+		
+		(:method (say-to-person ?player ?text ?person)
+			
+			;This is the first branch where we are checking that are they in the same room or not! If they are in the same 
+			;room then they will say ?text to each other which is on the second line
+			
+			;Branch 0 (1)
+			((in-location ?player ?loc)(in-location ?person ?loc) (call TracePrint (say-to-person branch-1 ?loc)))
+			;Branc 0 (2)
+			((!say ?player ?text ?person))
+			
+			;If they are not in the same room then we are trying to find a path between both locations 
+			;and then again trying to say the text, so recursive call to this same function!
+			
+			;Branck 1(1)
+			((in-location ?player ?loc1)(in-location ?person ?loc2)(call TracePrint(say-to-person branch-2 ?loc1 ?loc2)))
+			;Branch 1(2)
+			((walk-path ?loc1 ?loc2)(say-to-person ?player ?text ?person))	
+			
+		)
+		
+		(:method (walk-path ?loc1 ?loc2)
+			;If both are at the same place then we are done!
+			((in-location ?player ?loc1) (same ?loc1 ?loc2)(call TracePrint (walk-path branch1 ?loc1)))
+			()
+			
+			;If there is a direct connection between them then walk from ?loc1 to ?loc2
+			((in-location ?player ?loc1)(can-walk ?loc1 ?loc2) (call TracePrint(walk-path branch2 ?loc1 ?loc2)))
+			((!walk ?player ?loc1 ?loc2))
+			
+			;If no direct connection find intermediate location and walk to an intermediate location recursively 
+			((in-location ?player  ?loc1) (can-walk ?loc1 ?mid) (not (visited ?mid)) (call TracePrint (walk-path branch-3 ?loc1 ?mid ?loc2)))
+			((!!visit ?loc1)(!walk ?player ?loc1 ?mid) (!!trace (recursively-calling walk-path)) (walk-path ?mid ?loc2) (!!trace (stopped-recursing walk-path)))
+		)
+		
+		;This is an axiom which checks that if loc1 and loc2 are connected then you can walk between them!!
+		(:- (can-walk ?loc1 ?loc2) (connected ?loc1 ?loc2))
+		(:- (can-walk ?loc1 ?loc2) (connected ?loc2 ?loc1))
+		
+		;This checks that if both of them are same or not!
+		(:- (same ?x ?x) nil)
+	)
+)
